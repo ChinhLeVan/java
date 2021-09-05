@@ -11,11 +11,11 @@ public class Exercise3 {
 	
 	//==================================QUESTION 1==============================
 	public void question1_2_3() {
-		StudentEx3<Integer> student1 = new StudentEx3<Integer>(1, "strudent int");
+		StudentEx3<Integer> student1 = new StudentEx3<Integer>(1, "student int");
 		System.out.println(student1.toString());
-		StudentEx3<Float> student2 = new StudentEx3<Float>(2.0f, "strudent float");
+		StudentEx3<Float> student2 = new StudentEx3<Float>(2.0f, "student float");
 		System.out.println(student2.toString());
-		StudentEx3<Double> student3 = new StudentEx3<Double>(3.0, "strudent double");
+		StudentEx3<Double> student3 = new StudentEx3<Double>(3.0, "student double");
 		System.out.println(student3.toString());	
 	}
 
@@ -25,7 +25,7 @@ public class Exercise3 {
 	}
 	
 	public void question2() {
-		StudentEx3<Integer> student1 = new StudentEx3<Integer>(1, "strudent int");
+		StudentEx3<Integer> student1 = new StudentEx3<Integer>(1, "student int");
 		printGeneric(student1);
 	}
 	//===================================QUESTION 4==============================
