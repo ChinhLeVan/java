@@ -18,7 +18,7 @@ public class DepartmentDao {
 		String url = "jdbc:mysql://localhost:3306/testing_system?autoReconnect=true&useSSL=false&characterEncoding=latin1";
 		String username ="root";
 		String password = "Root";
-
+		
 		// register the driver class with DriverManager
 		Class.forName("com.mysql.cj.jdbc.Driver");
 		
@@ -28,8 +28,7 @@ public class DepartmentDao {
 		return connection;
 		}
 	
-	public void menuEx2() throws ClassNotFoundException, SQLException {
-			
+	public void menuEx2() throws ClassNotFoundException, SQLException {		
 			Connection connection = getConnection();
 			while(true) {
 				System.out.println("Mời bạn chọn chức năng: \n"
@@ -48,8 +47,15 @@ public class DepartmentDao {
 					break;
 				}
 				case 2: {
-					Department departmentResult = getDepartmentById(connection);
-					System.out.println(departmentResult.toString());
+					while (true) {
+						try {
+							Department departmentResult = getDepartmentById(connection);
+							System.out.println(departmentResult.toString());
+							break;
+						} catch (NullPointerException e) {
+							System.out.println("Try again!!! ");
+						}	
+					}	
 					break;
 				}
 				case 3: {
@@ -98,6 +104,7 @@ public class DepartmentDao {
 		
 		String sq1 = "SELECT * FROM `department`";
 		Statement statement = connection.createStatement();
+		
 		ResultSet resultset = statement.executeQuery(sq1);
 				
 		while (resultset.next()) {
@@ -117,7 +124,9 @@ public class DepartmentDao {
 		System.out.println("Enter id you can find: ");
 		int numId = Integer.parseInt(scanner.nextLine());
 		preparedStatement.setInt(1, numId);
+		
 		ResultSet resultSet = preparedStatement.executeQuery();
+		
 		if (resultSet.next()) {
 			int id = resultSet.getInt("department_id");
 			String name = resultSet.getString("department_name");
@@ -145,7 +154,7 @@ public class DepartmentDao {
 	//=================================Question 5=============================================
 	public void createDepartment(Connection connection) throws SQLException {
 		String sq3 = "INSERT INTO `department`(department_name)  "
-				+ "VALUES					(?)";
+					+ "VALUES					(?)";
 		PreparedStatement preparedStatement = connection.prepareStatement(sq3);
 		// input name
 		System.out.println("Mời nhập tên muốn thêm vào...");
