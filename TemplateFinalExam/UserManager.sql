@@ -41,7 +41,7 @@ VALUES
 					(N'Lê Văn Chính',		'lechinh29@gmail.com', 	'Chinhle',			'Admin'	),
                     (N'Nguyễn Hùng Mạnh',	'hungmanh@gmail.com',	 'hunGmanh1',		'User'	),
                     (N'Tống Thị Nhung',		'nhung@gmail.com', 		'nhungtOng',		'User'	),
-                    (N'Trần Thị Kim Anh',	'kimoanh.tran@gmail.com', 'tran.kim',		'User'	);
+                    (N'Trần Thị Kim Anh',	'kimoanh.tran@gmail.com', 'tran.Kim',		'User'	);
                     
 INSERT INTO `Admin`(UserID, ExpInYear)
 VALUES				(2,	3);
