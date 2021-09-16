@@ -1,18 +1,18 @@
 package com.vti.entity;
 
 public class Admin extends User {
-	private short ExpInYear;
+	private int ExpInYear;
 
-	public Admin(short id, String fullName, String email, String passWord, Role role, short expInYear) {
+	public Admin(int id, String fullName, String email, String passWord, Role role, int expInYear) {
 		super(id, fullName, email, passWord, role);
 		ExpInYear = expInYear;
 	}
 
-	public short getExpInYear() {
+	public int getExpInYear() {
 		return ExpInYear;
 	}
 
-	public void setExpInYear(short expInYear) {
+	public void setExpInYear(int expInYear) {
 		ExpInYear = expInYear;
 	}
 
@@ -20,8 +20,7 @@ public class Admin extends User {
 	public String toString() {
 		return "Admin [ExpInYear=" + ExpInYear + ", getId()=" + getId() + ", getFullName()=" + getFullName()
 				+ ", getEmail()=" + getEmail() + ", getPassWord()=" + getPassWord() + ", getRole()=" + getRole()
-				+ ", toString()=" + super.toString() + ", getClass()=" + getClass() + ", hashCode()=" + hashCode()
-				+ "]";
+				+  "]";
 	}
 	
 }

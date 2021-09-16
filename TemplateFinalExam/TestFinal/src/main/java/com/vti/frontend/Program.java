@@ -1,8 +1,5 @@
 package com.vti.frontend;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.sql.SQLException;
 
 import com.vti.Utils.ScannerUtils;
 import com.vti.entity.Role;
@@ -10,11 +7,11 @@ import com.vti.entity.User;
 
 public class Program {
 	public static void main(String[] args)
-			throws FileNotFoundException, ClassNotFoundException, IOException, SQLException {
+			throws Exception {
 		menuLogin();
 	}
 
-	private static void menuLogin() throws FileNotFoundException, ClassNotFoundException, IOException, SQLException {
+	private static void menuLogin() throws Exception {
 		Function function = new Function();
 		System.out.println("MỜI BẠN LOGIN");
 		User user = function.login();
@@ -32,15 +29,15 @@ public class Program {
 	}
 
 	private static void menuAdmin(User user)
-			throws FileNotFoundException, ClassNotFoundException, IOException, SQLException {
+			throws Exception {
 		Function function = new Function();
 		System.out.println("Chào mừng Admin " + user.getFullName() + "!");
 		System.out.println("Moi ban nhap chuc nang muon su dung:\n" + "1: In ra danh sách các User\n"
-				+ "2: Tìm user theo ID\n" + "3: Xóa user theo id\n" + "4: Login\n" + "5: Thoat khoi chuong trinh\n ");
+				+ "2: Tìm user theo ID\n" + "3: Xóa user theo id\n" + "4: Login\n" + "5: Thêm user\n " + "6: Thoat khoi chuong trinh\n ");
 
 		while (true) {
 			System.out.print("Moi ban nhap chuc nang: ");
-			int choose = ScannerUtils.inputFunction(1, 5, "Ban chi duoc chon tu 1 --> 5. Mời nhập lại!");
+			int choose = ScannerUtils.inputFunction(1, 6, "Ban chi duoc chon tu 1 --> 6. Mời nhập lại!");
 
 			switch (choose) {
 			case 1:
@@ -56,6 +53,9 @@ public class Program {
 				function.login();
 				break;
 			case 5:
+				function.createUser(user);
+				break;
+			case 6:
 				System.out.println("bạn đã thoát khỏi chương trình!");
 				return;
 			}

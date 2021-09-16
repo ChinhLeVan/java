@@ -36,4 +36,8 @@ public class UserController {
 	public User login(String email, String password) throws Exception {
 		return userService.login(email, password);
 	}
+	
+	public void createUser(String fullName, String email) throws Exception {
+		userService.createUser(fullName, email);
+	}
 }

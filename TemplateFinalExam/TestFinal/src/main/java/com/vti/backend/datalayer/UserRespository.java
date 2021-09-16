@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.vti.Utils.JdbcUltils;
+import com.vti.entity.Admin;
+import com.vti.entity.Employee;
 import com.vti.entity.Role;
 import com.vti.entity.User;
 
@@ -29,24 +31,41 @@ public class UserRespository implements IUserRespository {
 			connection = jdbcUltils.connect();
 			Statement statement = connection.createStatement();
 			
-			String listUser = "SELECT * FROM usermanager.user";
-			ResultSet resultSet = statement.executeQuery(listUser);
+			String listEmployee = "SELECT e.UserID, FullName, Email, `Role`, 	`Password`, ProSkill  FROM Employee e\r\n" + 
+					"INNER JOIN `User` u ON u.UserID = e.UserID";
+			ResultSet resultSetE = statement.executeQuery(listEmployee);
 			
-			while (resultSet.next()) {
-				int userId = resultSet.getInt("UserID");
-				String fullName = resultSet.getString("FullName");
-				String email = resultSet.getString("Email");
-				String passWord = resultSet.getString("Password");
-				Role role = Role.valueOf(resultSet.getString("Role"));
+			while (resultSetE.next()) {
+				int userId = resultSetE.getInt("UserID");
+				String fullName = resultSetE.getString("FullName");
+				String email = resultSetE.getString("Email");
+				String passWord = resultSetE.getString("Password");
+				Role role = Role.valueOf(resultSetE.getString("Role"));
+				String proSkill = resultSetE.getString("ProSkill");
 				
-				User user = new User(userId, fullName, email, passWord, role);
-				users.add(user);
-			}
-			return users;
+				Employee employee = new Employee(userId, fullName, email, passWord, role, proSkill);
+				users.add(employee);
+			}	
+			String listAdmin = "SELECT a.UserID, FullName, Email, `Role`, 	`Password`, ExpInYear  FROM Admin a\r\n" + 
+					"INNER JOIN `User` u ON u.UserID = a.UserID";
+			ResultSet resultSetA = statement.executeQuery(listAdmin);
 			
+			while (resultSetA.next()) {
+				int userId = resultSetA.getInt("UserID");
+				String fullName = resultSetA.getString("FullName");
+				String email = resultSetA.getString("Email");
+				String passWord = resultSetA.getString("Password");
+				Role role = Role.valueOf(resultSetA.getString("Role"));
+				int expInYear = resultSetA.getInt("ExpInYear");
+				
+				Admin admin = new Admin(userId, fullName, email, passWord, role, expInYear);
+				users.add(admin);
+			}	
+			return users;	
 		} finally {
 			connection.close();
 		}
+		
 	
 	}
 
@@ -55,23 +74,44 @@ public class UserRespository implements IUserRespository {
 		try {
 			connection = jdbcUltils.connect();
 			
-			String sql = "SELECT * FROM usermanager.user WHERE UserID = ?";
-			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			String sqlE = "SELECT e.UserID, FullName, Email, `Role`, 	`Password`, ProSkill  FROM Employee e \r\n" +
+							"INNER JOIN `User` u ON u.UserID = e.UserID  WHERE e.UserID = ?";
+			PreparedStatement preparedStatement = connection.prepareStatement(sqlE);
 			preparedStatement.setInt(1, id);
 			
-			ResultSet resultSet = preparedStatement.executeQuery();
+			ResultSet resultSetE = preparedStatement.executeQuery();
 			
-			while (resultSet.next()) {
-				int userId = resultSet.getInt("UserID");
-				String fullName = resultSet.getString("FullName");
-				String email = resultSet.getString("Email");
-				String password = resultSet.getString("Password");
-				Role role = Role.valueOf(resultSet.getString("Role"));
+			if (resultSetE.next()) {
+				int userId = resultSetE.getInt("UserID");
+				String fullName = resultSetE.getString("FullName");
+				String email = resultSetE.getString("Email");
+				String password = resultSetE.getString("Password");
+				Role role = Role.valueOf(resultSetE.getString("Role"));
+				String proSkill = resultSetE.getString("ProSkill");
 
-				User user = new User(userId, fullName, email, password, role);
+				Employee employee = new Employee(userId, fullName, email, password, role, proSkill);
 
-				return user;
-			}
+				return employee;
+			} else{
+				String sqlA = "SELECT a.UserID, FullName, Email, `Role`, 	`Password`, ExpInYear  FROM Admin a \r\n" + 
+							"INNER JOIN `User` u ON u.UserID = a.UserID  WHERE a.UserID = ?";
+				PreparedStatement preparedStatementA = connection.prepareStatement(sqlA);
+				preparedStatementA.setInt(1, id);
+				
+				ResultSet resultSetA = preparedStatementA.executeQuery();
+				
+				if (resultSetA.next()) {
+					int userId = resultSetA.getInt("UserID");
+					String fullName = resultSetA.getString("FullName");
+					String email = resultSetA.getString("Email");
+					String password = resultSetA.getString("Password");
+					Role role = Role.valueOf(resultSetA.getString("Role"));
+					int expInYear = resultSetA.getInt("ExpInYear");
+
+					Admin admin = new Admin(userId, fullName, email, password, role, expInYear);
+
+					return admin;
+			}	}
 			return null;
 						
 		} finally {
@@ -165,5 +205,61 @@ public class UserRespository implements IUserRespository {
 		}
 
 }
+
+	public void createUser(String fullName, String email) throws Exception {
+		try {
+			connection = jdbcUltils.connect();
+			String passWord = "123456"; 
+			String role = Role.User.name();
+			
+			
+			String sql = "INSERT INTO User(FullName,Email,Password,Role) VALUES(?,?,?,?)";
+			PreparedStatement preparedStatement = connection.prepareStatement(sql);
+			
+			preparedStatement.setString(1, fullName);
+			preparedStatement.setString(2, email);
+			preparedStatement.setString(3, passWord);
+			preparedStatement.setString(4, role);
+			
+			int affectedRows = preparedStatement.executeUpdate();
+			
+			
+			if (affectedRows>0) {
+					createEmployee();
+					//System.out.println("Bạn đã tạo thành công!");
+				}
+				else {
+				throw new Exception("Bạn chưa tạo thành công");
+			}
+		} finally {
+			connection.close();
+		}
+	}
+	
+	public void createEmployee() throws ClassNotFoundException, SQLException {
+		try {
+			String sqlE = "SELECT MAX(UserID) AS UserID FROM User";
+			connection = jdbcUltils.connect();
+			Statement statement = connection.createStatement();
+			ResultSet resultSetE = statement.executeQuery(sqlE);
+			int UserId =0;
+			if (resultSetE.next()) {
+				UserId = resultSetE.getInt("UserID");
+				System.out.println("UserId add" +UserId);
+				String proSkill = "java";		
+				String sqlInsertE = "INSERT INTO Employee(UserID,ProSkill) VALUES(?,?)";
+				PreparedStatement preparedStatementE = connection.prepareStatement(sqlInsertE);
+
+				preparedStatementE.setInt(1, UserId);
+				preparedStatementE.setString(2, proSkill);
+				int affectedRowsE = preparedStatementE.executeUpdate();
+				if (affectedRowsE>0) {
+					System.out.println("Bạn đã tạo thành công!");
+				}
+			}
+		} finally {
+			connection.close();
+		}
+	}
 	
 }

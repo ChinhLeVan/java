@@ -7,6 +7,9 @@ import java.util.List;
 
 import com.vti.Utils.ScannerUtils;
 import com.vti.backend.presentation.UserController;
+import com.vti.entity.Admin;
+import com.vti.entity.Employee;
+import com.vti.entity.Role;
 import com.vti.entity.User;
 
 public class Function {
@@ -18,10 +21,17 @@ public class Function {
 
 	public void getListUser() throws ClassNotFoundException, SQLException {
 		List<User> users = userController.getListUsers();
-		System.out.printf("%-15s %-25s %-25s %-25s\n", "ID", "Email", "Fullname", "Password");
+		System.out.printf("%-15s %-25s %-25s %-25s %-25s %-25s %-25s\n", "ID", "Email", "Fullname", "Password", "Role", "proSkill", "expInYear");
 		for (User user : users) {
-			System.out.printf("%-15s %-25s %-25s %-25s\n", user.getId(), user.getEmail(), user.getFullName(),
-					"*********");
+			if (user instanceof Employee) {
+				System.out.printf("%-15s %-25s %-25s %-25s %-25s %-25s %-25s\n", user.getId(), user.getEmail(), user.getFullName(),"*********",
+						user.getRole(), ((Employee) user).getProSkill(), "");
+			}else if (user instanceof Admin) {
+				System.out.printf("%-15s %-25s %-25s %-25s %-25s %-25s %-25s\n", user.getId(), user.getEmail(), user.getFullName(),"*********",
+						user.getRole(), "", ((Admin) user).getExpInYear()) ;
+			}
+			
+			//System.out.println(user.toString());
 		}
 	}
 
@@ -64,6 +74,18 @@ public class Function {
 			} catch (Exception e) {
 				System.err.println(e.getMessage() + "\n");
 			}
+		}
+	}
+	
+	public void createUser(User user) throws Exception {
+		if (user.getRole() == Role.Admin) {
+			System.out.println("Nhập vào tên đầy đủ:");
+			String fullName = ScannerUtils.inputName("Bạn nhập tên chưa đúng định dạng");
+			
+			System.out.println("Nhập vào email");
+			String email = ScannerUtils.inputEmail("Email chưa đúng định dạng");
+			
+			userController.createUser(fullName, email);
 		}
 	}
 }

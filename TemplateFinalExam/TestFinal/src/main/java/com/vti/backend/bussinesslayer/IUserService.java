@@ -15,4 +15,6 @@ public interface IUserService {
 	boolean isUserIdExits(int id) throws ClassNotFoundException, SQLException;
 
 	User login(String email, String password) throws Exception;
+	
+	void createUser(String fullName, String email) throws Exception;
 }
