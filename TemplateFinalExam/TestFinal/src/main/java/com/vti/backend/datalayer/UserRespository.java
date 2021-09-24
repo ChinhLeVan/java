@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.vti.Utils.JdbcUltils;
+import com.vti.Utils.ScannerUtils;
 import com.vti.entity.Admin;
 import com.vti.entity.Employee;
 import com.vti.entity.Role;
@@ -245,8 +246,8 @@ public class UserRespository implements IUserRespository {
 			int UserId =0;
 			if (resultSetE.next()) {
 				UserId = resultSetE.getInt("UserID");
-				System.out.println("UserId add" +UserId);
-				String proSkill = "java";		
+				System.out.println("Nhập vào proSkill của employee");
+				String proSkill = ScannerUtils.inputString("Nhập sai");		
 				String sqlInsertE = "INSERT INTO Employee(UserID,ProSkill) VALUES(?,?)";
 				PreparedStatement preparedStatementE = connection.prepareStatement(sqlInsertE);
 
